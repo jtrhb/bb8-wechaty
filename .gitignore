@@ -7,3 +7,9 @@ node_modules
 .DS_Store
 package-lock.json
 yarn.lock
+dist
+yarn.lock
+yarn-error.log
+**/env
+migrations/
+.VSCodeCounter/
