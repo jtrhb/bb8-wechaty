@@ -1,6 +1,7 @@
 import {log, ScanStatus, WechatyBuilder, Message} from "wechaty"
 import {PuppetPadlocal} from "wechaty-puppet-padlocal"
 import * as PUPPET from "wechaty-puppet"
+import { FileBox }  from 'file-box'
 import {dingDongBot, getMessagePayload, LOGPRE} from "./helper"
 import Redis from 'ioredis'
 import { v4 as uuidv4 } from 'uuid'
@@ -128,4 +129,20 @@ async function handleMessage(message: Message) {
 export async function sendText(chatId, text) {
   const contact = chatId2contact[chatId]
   await contact.say(text)
+}
+
+export async function sendImage(chatId, imageUrl) {
+  const contact = chatId2contact[chatId]
+  const image = FileBox.fromUrl(imageUrl)
+  await contact.say(image)
+}
+
+export async function createRoom(chatId, salesName, greeting) {
+  const helperContactA = chatId2contact[chatId]
+  const helperContactB = await bot.Contact.find({ name: salesName })
+  const contactList = [helperContactA, helperContactB]
+  console.log('Bot', 'contactList: %s', contactList.join(','))
+  const room = await bot.Room.create(contactList, `${helperContactA.name()}的专属服务群`)
+  console.log('Bot', 'createRoom() new room created: %s', room)
+  await room.say(greeting)
 }
