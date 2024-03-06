@@ -23,7 +23,7 @@ app.post('/send/text', async (req, res) => {
   res.end()
   const data = req.body
   console.log(data)
-  await sendImage(data.chatId, data.text)
+  await sendText(data.chatId, data.text)
   console.log(`message sent: ${data.text}`)
 })
 
@@ -31,7 +31,7 @@ app.post('/send/image', async (req, res) => {
   res.end()
   const data = req.body
   console.log(data)
-  await sendText(data.chatId, data.text)
+  await sendImage(data.chatId, data.text)
   console.log(`message sent: ${data.text}`)
 })
 
