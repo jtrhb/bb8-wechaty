@@ -140,6 +140,7 @@ export async function sendImage(chatId, imageUrl) {
 export async function createRoom(chatId, salesName, greeting) {
   const helperContactA = chatId2contact[chatId]
   const helperContactB = await bot.Contact.find({ name: salesName })
+  if (helperContactA === helperContactB) return
   const contactList = [helperContactA, helperContactB]
   console.log('Bot', 'contactList: %s', contactList.join(','))
   const room = await bot.Room.create(contactList, `${helperContactA.name()}的专属服务群`)
