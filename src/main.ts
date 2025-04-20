@@ -112,15 +112,16 @@ async function handleMessage(message: Message) {
       contactId2chatId[contact.id] = chatId
       chatId2contact[chatId] = contact
     }
-    await axios.post('http://127.0.0.1:8080/message/', {
-      "data": {
-        "botWeixin": "hongkongBot",
-        "chatId": contactId2chatId[contact!.id],
-        "payload": {"text": message.text()},
-        "roomWecomChatId": null,
-        "contactName": contact.name()
-      }
-    })
+    // await axios.post('http://127.0.0.1:8080/message/', {
+    //   "data": {
+    //     "botWeixin": "hongkongBot",
+    //     "chatId": contactId2chatId[contact!.id],
+    //     "payload": {"text": message.text()},
+    //     "roomWecomChatId": null,
+    //     "contactName": contact.name()
+    //   }
+    // })
+    console.log(message.text())
   } catch (error) {
     console.log(error)
   }
