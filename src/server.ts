@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express'
 import timeout from 'connect-timeout'
 import path from 'path'
-import { bot, sendText, sendImage, createRoom, welcome } from './main'
+import { bot, sendText, sendImage, createRoom } from './main'
 import { Server as SocketIOServer } from 'socket.io'
 import { createServer } from 'http'
 
@@ -31,13 +31,6 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 });
-
-bot.on('scan', (qrcode, status) => {
-  io.emit('bot-scan', { qrcode, status })
-})
-bot.on('message', (message) => {
-  io.emit('bot-message', message.toJSON())
-})
 
 app.post('/send/text', async (req, res) => {
   res.end()
@@ -77,5 +70,4 @@ httpServer.listen(port, async () => {
   bot.start()
     .then(() => console.log('StarterBot', 'Starter Bot Started.'))
     .catch(e => console.log('StarterBot', e))
-  await welcome()
 })

@@ -14,7 +14,7 @@ import { io } from 'socket.io-client'
 // log.level("silly");
 const axios = require('axios')
 
-const redisClient = new Redis()
+const redisClient = new Redis(process.env.REDIS_URL!)
 const socket = io("http://localhost:3000")
 
 
@@ -22,7 +22,7 @@ const chatId2contact = {}
 const contactId2chatId = {}
 
 const puppet = new PuppetPadlocal({
-    token: "puppet_padlocal_a6cf8740af134364818e9bbbc6877213"
+    token: "puppet_padlocal_62943dd47a774383bd65749858fd8b7c"
 })
 
 export const bot = WechatyBuilder.build({
@@ -61,12 +61,12 @@ export const bot = WechatyBuilder.build({
     log.info(LOGPRE, `${user} logout, reason: ${reason}`);
   })
 
-  .on("message", handleMessage)
   .on('message', (message) => {
     const payload = getMessagePayload(message)
     socket.emit('message', {
       payload
     })
+    handleMessage(message)
   })
   .on("room-invite", async (roomInvitation) => {
     log.info(LOGPRE, `on room-invite: ${roomInvitation}`);

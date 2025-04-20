@@ -1,8 +1,8 @@
-tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Layout, List, Avatar, Input, Button, message, Spin, QRCode } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import io from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
 const { Sider, Content, Footer } = Layout;
 const { Search, TextArea } = Input;
@@ -30,7 +30,7 @@ const App: React.FC = () => {
   const [messageInput, setMessageInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [qrCodeData, setQrCodeData] = useState<string | null>(null);
-  const socketRef = useRef<SocketIOClient.Socket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
