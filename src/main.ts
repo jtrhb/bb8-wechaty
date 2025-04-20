@@ -6,6 +6,8 @@ import {dingDongBot, getMessagePayload, LOGPRE} from "./helper"
 import Redis from 'ioredis'
 import { v4 as uuidv4 } from 'uuid'
 
+import { io } from 'socket.io-client'
+
 /****************************************
  * 去掉注释，可以完全打开调试日志
  ****************************************/
@@ -13,6 +15,9 @@ import { v4 as uuidv4 } from 'uuid'
 const axios = require('axios')
 
 const redisClient = new Redis()
+const socket = io("http://localhost:3000")
+
+
 const chatId2contact = {}
 const contactId2chatId = {}
 
@@ -27,7 +32,7 @@ export const bot = WechatyBuilder.build({
   .on("scan", (qrcode, status) => {
     if (status === ScanStatus.Waiting && qrcode) {
       const qrcodeImageUrl = [
-        'https://wechaty.js.org/qrcode/',
+        'https://api.qrserver.com/v1/create-qr-code/?data=',
         encodeURIComponent(qrcode),
       ].join('')
 
@@ -41,6 +46,8 @@ export const bot = WechatyBuilder.build({
 
       console.log(`\n2. Or open the link in your browser: ${qrcodeImageUrl}`);
       console.log("\n==================================================================\n");
+      // emit scan event to frontend
+      socket.emit('scan', { qrcode: qrcodeImageUrl, status: status })
     } else {
       log.info(LOGPRE, `onScan: ${ScanStatus[status]}(${status})`);
     }
@@ -55,7 +62,12 @@ export const bot = WechatyBuilder.build({
   })
 
   .on("message", handleMessage)
-
+  .on('message', (message) => {
+    const payload = getMessagePayload(message)
+    socket.emit('message', {
+      payload
+    })
+  })
   .on("room-invite", async (roomInvitation) => {
     log.info(LOGPRE, `on room-invite: ${roomInvitation}`);
   })
@@ -104,7 +116,7 @@ export const bot = WechatyBuilder.build({
 
 async function handleMessage(message: Message) {
   if (message.self()) return
-  if (message.type() !== PUPPET.types.Message.Text) return
+  // if (message.type() !== PUPPET.types.Message.Text) return
   try {
     const contact = message.talker()
     if (contact && !contactId2chatId[contact.id]) {
@@ -121,7 +133,6 @@ async function handleMessage(message: Message) {
     //     "contactName": contact.name()
     //   }
     // })
-    console.log(message.text())
   } catch (error) {
     console.log(error)
   }
