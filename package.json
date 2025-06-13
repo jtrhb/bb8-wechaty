@@ -27,7 +27,12 @@
     "wechaty-puppet-padlocal": "^1.20.1"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.3",
     "cross-env": "^7.0.3",
+    "jest": "^30.0.0",
+    "supertest": "^7.1.1",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4",
     "vite": "^6.3.2"
@@ -37,7 +42,8 @@
     "dev": "vite",
     "start": "dotenv -e .env node dist/server.js",
     "clean": "rm -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json"
+    "compile": "tsc -p tsconfig.build.json",
+    "test": "jest"
   },
   "engines": {
     "node": ">= 16",
