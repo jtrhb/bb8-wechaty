@@ -64,10 +64,14 @@ app.post('/room/create', async (req, res) => {
   await createRoom(data.chatId, '陈维', data.text)
 })
 
-httpServer.listen(port, async () => {
-  console.log(`Server is running on port ${port}`);
+if (process.env.NODE_ENV !== 'test') {
+  httpServer.listen(port, async () => {
+    console.log(`Server is running on port ${port}`);
 
-  bot.start()
-    .then(() => console.log('StarterBot', 'Starter Bot Started.'))
-    .catch(e => console.log('StarterBot', e))
-})
+    bot.start()
+      .then(() => console.log('StarterBot', 'Starter Bot Started.'))
+      .catch(e => console.log('StarterBot', e))
+  })
+}
+
+export { app, httpServer }
